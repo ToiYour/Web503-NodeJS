@@ -1,5 +1,6 @@
 import express from "express";
 import Book from "../models/book.js";
+import BookValidate from "../middelwares/book.js";
 const router = express.Router();
 router.get("/", async (req, res) => {
   try {
@@ -14,10 +15,13 @@ router.get("/:id", async (req, res) => {
     const books = await Book.findOne({ _id: req.params.id });
     res.send(books);
   } catch (error) {
-    console.log(error);
+    res.send({
+      status: false,
+      message: "Không tìm thấy sản phẩm nào khớp với ID",
+    });
   }
 });
-router.post("/", async (req, res) => {
+router.post("/", BookValidate, async (req, res) => {
   try {
     const books = await Book.create(req.body);
     res.send({
@@ -29,7 +33,7 @@ router.post("/", async (req, res) => {
     console.log(error);
   }
 });
-router.put("/:id", async (req, res) => {
+router.put("/:id", BookValidate, async (req, res) => {
   try {
     const books = await Book.findByIdAndUpdate(
       { _id: req.params.id },
@@ -41,7 +45,10 @@ router.put("/:id", async (req, res) => {
       books,
     });
   } catch (error) {
-    console.log(error);
+    res.send({
+      status: false,
+      message: "Không tìm thấy sản phẩm nào khớp với ID",
+    });
   }
 });
 router.delete("/:id", async (req, res) => {
@@ -53,7 +60,10 @@ router.delete("/:id", async (req, res) => {
       books,
     });
   } catch (error) {
-    console.log(error);
+    res.send({
+      status: false,
+      message: "Không tìm thấy sản phẩm nào khớp với ID",
+    });
   }
 });
 
