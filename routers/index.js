@@ -9,6 +9,14 @@ router.get("/", async (req, res) => {
     console.log(error);
   }
 });
+router.get("/:id", async (req, res) => {
+  try {
+    const books = await Book.findOne({ _id: req.params.id });
+    res.send(books);
+  } catch (error) {
+    console.log(error);
+  }
+});
 router.post("/", async (req, res) => {
   try {
     const books = await Book.create(req.body);
