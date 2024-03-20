@@ -12,12 +12,18 @@ router.get("/", async (req, res) => {
 });
 router.get("/:id", async (req, res) => {
   try {
-    const books = await Book.findOne({ _id: req.params.id });
-    res.send(books);
+    const book = await Book.findOne({ _id: req.params.id });
+    if (!book) {
+      return res.status(404).json({
+        status: false,
+        message: "Không tìm thấy sản phẩm nào khớp với ID",
+      });
+    }
+    res.send(book);
   } catch (error) {
-    res.send({
+    res.status(500).json({
       status: false,
-      message: "Không tìm thấy sản phẩm nào khớp với ID",
+      message: "Đã xảy ra lỗi khi truy vấn dữ liệu",
     });
   }
 });
@@ -30,7 +36,7 @@ router.post("/", BookValidate, async (req, res) => {
       books,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 });
 router.put("/:id", BookValidate, async (req, res) => {

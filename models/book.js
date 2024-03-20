@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
-mongoose.connect("mongodb://127.0.0.1:27017/Web503_NodeJS");
+try {
+  mongoose
+    .connect("mongodb://127.0.0.1:27017/Web503_NodeJS")
+    .then(() => console.log("Connect DB Successfully"));
+} catch (error) {
+  console.log(`Connect DB Not Successfully`);
+}
+
 const Book = new mongoose.Schema(
   {
     name: { type: String, required: true },
