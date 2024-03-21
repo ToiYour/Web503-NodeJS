@@ -11,6 +11,7 @@ router.get("/", async (req, res) => {
   }
 });
 router.get("/:id", async (req, res) => {
+  // console.log(req.params.id);
   try {
     const book = await Book.findOne({ _id: req.params.id });
     if (!book) {
@@ -45,30 +46,42 @@ router.put("/:id", BookValidate, async (req, res) => {
       { _id: req.params.id },
       req.body
     );
+    if (!books) {
+      return res.status(404).json({
+        status: false,
+        message: "Không tìm thấy sản phẩm nào khớp với ID",
+      });
+    }
     res.send({
       status: true,
       message: "Cập nhập thành công",
       books,
     });
   } catch (error) {
-    res.send({
+    res.status(500).json({
       status: false,
-      message: "Không tìm thấy sản phẩm nào khớp với ID",
+      message: "Đã xảy ra lỗi khi truy vấn dữ liệu",
     });
   }
 });
 router.delete("/:id", async (req, res) => {
   try {
     const books = await Book.deleteOne({ _id: req.params.id });
+    if (books.deletedCount == 0) {
+      return res.status(404).json({
+        status: false,
+        message: "Không tìm thấy sản phẩm nào khớp với ID",
+      });
+    }
     res.send({
       status: true,
       message: "Xoá  thành công",
       books,
     });
   } catch (error) {
-    res.send({
+    res.status(500).json({
       status: false,
-      message: "Không tìm thấy sản phẩm nào khớp với ID",
+      message: "Đã xảy ra lỗi khi truy vấn dữ liệu",
     });
   }
 });
